@@ -1,3 +1,7 @@
 .idea
 Data
+trees
+venv
+.DS_Store
+__pycache__/
 

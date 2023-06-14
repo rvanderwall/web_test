@@ -44,12 +44,20 @@ class Element:
         if web_element is not None:
             self.tag_name = web_element.tag_name
             self.text = self._get_text(web_element)
+            self.e_class = web_element.get_attribute('class')
         else:
             self.tag_name = ""
             self.text = ""
+            self.e_class = ""
 
         self.parent = None
         self.children = []
+
+    def __str__(self):
+        return f"{self.tag_name}:{self.text}"
+
+    def has_text(self):
+        return self.text is not None and self.text != ""
 
     @staticmethod
     def _get_text(web_element):
@@ -65,6 +73,7 @@ class Element:
         json_doc = {
             "tag_name": self.tag_name,
             "text": self.text,
+            "class": self.e_class,
             "children": [child.to_json() for child in self.children]
         }
         if isinstance(self.location, Location):
@@ -83,6 +92,7 @@ class Element:
         e.location = Location.from_json(json_doc['location']) if 'location' in json_doc else None
         e.tag_name = json_doc["tag_name"]
         e.text = json_doc["text"]
+        e.e_class = json_doc['class']
         for child_json in json_doc["children"]:
             ce = Element.from_json(child_json)
             ce.parent = e
